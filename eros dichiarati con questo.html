@@ -33,7 +33,6 @@
             border-radius: 20px;
             padding: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 204, 0, 0.3);
         }
         
@@ -178,6 +177,7 @@
         .dog-mouth.happy {
             border-radius: 0 0 22px 22px;
             height: 25px;
+            width: 50px;
         }
         
         .inter-jersey {
@@ -265,30 +265,6 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-        }
-        
-        .stars {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: -1;
-        }
-        
-        .star {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background-color: white;
-            border-radius: 50%;
-            opacity: 0;
-        }
-        
-        @keyframes twinkle {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
         }
         
         /* Media Queries per dispositivi molto piccoli */
@@ -385,160 +361,124 @@
     </div>
 
     <script>
-        const messageElement = document.getElementById('message');
-        const noButton = document.getElementById('no-btn');
-        const yesButton = document.getElementById('yes-btn');
-        const leftEye = document.querySelector('.dog-eye.left');
-        const rightEye = document.querySelector('.dog-eye.right');
-        const mouth = document.querySelector('.dog-mouth');
-        
-        let noCount = 0;
-        const messages = [
-            "Ti va di uscire con me?",
-            "Sei sicura?",
-            "Proprio sicurissima?",
-            "Ma dai, ripensaci!",
-            "Ti prego, sono un cagnolino interista!",
-            "Ultima possibilità!"
-        ];
-        
-        // Crea stelle brillanti
-        function createStars() {
-            const starsContainer = document.createElement('div');
-            starsContainer.className = 'stars';
-            document.body.appendChild(starsContainer);
+        // Assicurati che il DOM sia completamente caricato
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageElement = document.getElementById('message');
+            const noButton = document.getElementById('no-btn');
+            const yesButton = document.getElementById('yes-btn');
+            const leftEye = document.querySelector('.dog-eye.left');
+            const rightEye = document.querySelector('.dog-eye.right');
+            const mouth = document.querySelector('.dog-mouth');
             
-            for (let i = 0; i < 40; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animation = `twinkle ${2 + Math.random() * 3}s infinite ${Math.random() * 5}s`;
-                starsContainer.appendChild(star);
-            }
-        }
-        
-        // Funzione per rendere il cane triste
-        function makeDogSad() {
-            leftEye.classList.add('sad');
-            rightEye.classList.add('sad');
-            mouth.classList.add('sad');
-            mouth.classList.remove('happy');
-        }
-        
-        // Funzione per rendere il cane felice
-        function makeDogHappy() {
-            leftEye.classList.remove('sad');
-            rightEye.classList.remove('sad');
-            mouth.classList.remove('sad');
-            mouth.classList.add('happy');
-        }
-        
-        // Funzione per resettare l'espressione del cane
-        function resetDogExpression() {
-            leftEye.classList.remove('sad');
-            rightEye.classList.remove('sad');
-            mouth.classList.remove('sad');
-            mouth.classList.remove('happy');
-        }
-        
-        noButton.addEventListener('click', function() {
-            noCount++;
+            let noCount = 0;
+            const messages = [
+                "Ti va di uscire con me?",
+                "Sei sicura?",
+                "Proprio sicurissima?",
+                "Ma dai, ripensaci!",
+                "Ti prego, sono un cagnolino interista!",
+                "Ultima possibilità!"
+            ];
             
-            // Cambia il messaggio
-            if (noCount < messages.length) {
-                messageElement.textContent = messages[noCount];
-            } else {
-                messageElement.textContent = "Va bene, mi arrendo...";
-                noButton.style.display = 'none';
+            // Funzione per rendere il cane triste
+            function makeDogSad() {
+                if (leftEye && rightEye && mouth) {
+                    leftEye.classList.add('sad');
+                    rightEye.classList.add('sad');
+                    mouth.classList.add('sad');
+                    mouth.classList.remove('happy');
+                }
             }
             
-            // Rimpicciolisce il pulsante No
-            const currentWidth = parseFloat(window.getComputedStyle(noButton).width);
-            const currentHeight = parseFloat(window.getComputedStyle(noButton).height);
-            noButton.style.width = (currentWidth * 0.8) + 'px';
-            noButton.style.height = (currentHeight * 0.8) + 'px';
-            noButton.style.fontSize = (parseFloat(window.getComputedStyle(noButton).fontSize) * 0.9) + 'px';
+            // Funzione per rendere il cane felice
+            function makeDogHappy() {
+                if (leftEye && rightEye && mouth) {
+                    leftEye.classList.remove('sad');
+                    rightEye.classList.remove('sad');
+                    mouth.classList.remove('sad');
+                    mouth.classList.add('happy');
+                }
+            }
             
-            // Ingrandisce il pulsante Sì
-            const currentYesWidth = parseFloat(window.getComputedStyle(yesButton).width);
-            const currentYesHeight = parseFloat(window.getComputedStyle(yesButton).height);
-            yesButton.style.width = (currentYesWidth * 1.2) + 'px';
-            yesButton.style.height = (currentYesHeight * 1.2) + 'px';
-            yesButton.style.fontSize = (parseFloat(window.getComputedStyle(yesButton).fontSize) * 1.1) + 'px';
-            
-            // Rende il cane triste
-            makeDogSad();
-        });
-        
-        yesButton.addEventListener('click', function() {
-            messageElement.textContent = "Evviva! Sono così felice! 🐶💙";
-            noButton.style.display = 'none';
-            yesButton.style.display = 'none';
-            
-            // Rende il cane felice
-            makeDogHappy();
-            
-            // Aggiungi fuochi d'artificio
-            createFireworks();
-        });
-        
-        function createFireworks() {
-            const container = document.querySelector('.container');
-            
-            for (let i = 0; i < 25; i++) {
-                setTimeout(() => {
-                    const firework = document.createElement('div');
-                    firework.style.position = 'absolute';
-                    firework.style.width = '6px';
-                    firework.style.height = '6px';
-                    firework.style.backgroundColor = getRandomColor();
-                    firework.style.borderRadius = '50%';
-                    firework.style.left = Math.random() * 80 + 10 + '%';
-                    firework.style.top = Math.random() * 80 + 10 + '%';
-                    firework.style.boxShadow = '0 0 10px ' + getRandomColor();
-                    firework.style.zIndex = '10';
-                    container.appendChild(firework);
+            // Aggiungi event listeners solo se i pulsanti esistono
+            if (noButton) {
+                noButton.addEventListener('click', function() {
+                    noCount++;
                     
-                    // Animazione del fuoco d'artificio
-                    firework.animate([
-                        { transform: 'scale(0)', opacity: 1 },
-                        { transform: 'scale(1.5)', opacity: 0 }
-                    ], {
-                        duration: 1000,
-                        easing: 'ease-out'
-                    });
+                    // Cambia il messaggio
+                    if (noCount < messages.length) {
+                        messageElement.textContent = messages[noCount];
+                    } else {
+                        messageElement.textContent = "Va bene, mi arrendo...";
+                        noButton.style.display = 'none';
+                    }
                     
+                    // Rimpicciolisce il pulsante No
+                    const currentWidth = parseFloat(window.getComputedStyle(noButton).width);
+                    const currentHeight = parseFloat(window.getComputedStyle(noButton).height);
+                    noButton.style.width = (currentWidth * 0.8) + 'px';
+                    noButton.style.height = (currentHeight * 0.8) + 'px';
+                    noButton.style.fontSize = (parseFloat(window.getComputedStyle(noButton).fontSize) * 0.9) + 'px';
+                    
+                    // Ingrandisce il pulsante Sì
+                    const currentYesWidth = parseFloat(window.getComputedStyle(yesButton).width);
+                    const currentYesHeight = parseFloat(window.getComputedStyle(yesButton).height);
+                    yesButton.style.width = (currentYesWidth * 1.2) + 'px';
+                    yesButton.style.height = (currentYesHeight * 1.2) + 'px';
+                    yesButton.style.fontSize = (parseFloat(window.getComputedStyle(yesButton).fontSize) * 1.1) + 'px';
+                    
+                    // Rende il cane triste
+                    makeDogSad();
+                });
+            }
+            
+            if (yesButton) {
+                yesButton.addEventListener('click', function() {
+                    messageElement.textContent = "Evviva! Sono così felice! 🐶💙";
+                    if (noButton) noButton.style.display = 'none';
+                    yesButton.style.display = 'none';
+                    
+                    // Rende il cane felice
+                    makeDogHappy();
+                    
+                    // Aggiungi fuochi d'artificio semplificati
+                    createFireworks();
+                });
+            }
+            
+            function createFireworks() {
+                const container = document.querySelector('.container');
+                if (!container) return;
+                
+                for (let i = 0; i < 15; i++) {
                     setTimeout(() => {
-                        firework.remove();
-                    }, 1000);
-                }, i * 100);
+                        const firework = document.createElement('div');
+                        firework.style.position = 'absolute';
+                        firework.style.width = '6px';
+                        firework.style.height = '6px';
+                        firework.style.backgroundColor = getRandomColor();
+                        firework.style.borderRadius = '50%';
+                        firework.style.left = Math.random() * 80 + 10 + '%';
+                        firework.style.top = Math.random() * 80 + 10 + '%';
+                        firework.style.boxShadow = '0 0 10px ' + getRandomColor();
+                        firework.style.zIndex = '10';
+                        container.appendChild(firework);
+                        
+                        // Rimuovi dopo l'animazione
+                        setTimeout(() => {
+                            if (firework.parentNode) {
+                                firework.parentNode.removeChild(firework);
+                            }
+                        }, 1000);
+                    }, i * 150);
+                }
             }
-        }
-        
-        function getRandomColor() {
-            const colors = ['#ffcc00', '#0046a8', '#ffffff', '#000000'];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-        
-        // Inizializza le stelle
-        createStars();
-        
-        // Previeni lo zoom su doppio tap su iOS
-        document.addEventListener('touchstart', function(event) {
-            if (event.touches.length > 1) {
-                event.preventDefault();
+            
+            function getRandomColor() {
+                const colors = ['#ffcc00', '#0046a8', '#ffffff'];
+                return colors[Math.floor(Math.random() * colors.length)];
             }
         });
-        
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function(event) {
-            const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
     </script>
 </body>
 </html>
